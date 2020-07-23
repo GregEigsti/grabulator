@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import collections
 import copy
 import datetime
 import json
@@ -11,8 +12,7 @@ from requests_html import HTMLSession
 
 
 SLEEP_TIME        = 1.00
-VEHICLE_LIVE_FILE = 'rairdon_live.json'
-VEHICLE_DEAD_FILE = 'rairdon_dead.json'
+VEHICLE_DATA_FILE = 'grabulator.json'
 VEHICLE_DATA_LEN  = 18
 SEPARATOR         = '----------------------------------------------------------------------------'
 
@@ -143,7 +143,7 @@ def fetch_link_set(urls):
             return None
 
         link_set |= url_set
-        print('Found {} viable vehicles on page {} for a total of {}'.format(
+        print('Found {} vehicles on page {} for a total of {}'.format(
             get_inventory_count(url_set),
             count,
             get_inventory_count(link_set)))
@@ -155,7 +155,7 @@ def fetch_link_set(urls):
 def get_inventory_link_set(link_set):
     return [l for l in link_set if '/inventory/' in l]
 
-# get count of viable found vehicles for more better user info
+# get count of found vehicles for more better user info
 def get_inventory_count(link_set):
     return len(get_inventory_link_set(link_set))
 
@@ -165,7 +165,7 @@ def fetch_links_to_dict(link_set, start_time):
     count = 0
     vehicle_dict = {}
     total = get_inventory_count(link_set)
-    print('\nFound {} viable vehicles'.format(total))
+    print('\nFound {} vehicles'.format(total))
     print(SEPARATOR)
 
     for link in get_inventory_link_set(link_set):
@@ -191,11 +191,6 @@ def fetch_links_to_dict(link_set, start_time):
 
     return vehicle_dict
 
-
-
-
-
-
 # parses sorted vehicle dict into "specials" and "normal" offers and prints the two lists
 # with specials printed before normal offers. Updates vehicle_dict_sorted dict items
 # to normalize between the "our_price" and "original_price" vehicle attributes which
@@ -219,112 +214,79 @@ def parse_print_offers(vehicle_dict_sorted):
     print_vehicle_dict(specials)
     print_vehicle_dict(normal)
 
+
 def get_dict_subset_available(sorted_dict):
-    return [sorted_dict[v] for v in sorted_dict if sorted_dict[v]['available']]
+    return collections.OrderedDict({k:v for k,v in filter(lambda t: t[1]['available'], sorted_dict.items())})
+
 
 def get_dict_subset_not_available(sorted_dict):
-    return [sorted_dict[v] for v in sorted_dict if not sorted_dict[v]['available']]
+    return collections.OrderedDict({k:v for k,v in filter(lambda t: not t[1]['available'], sorted_dict.items())})
+
 
 # persists received data and compares new results against previous results
-# TODO: move current previous live/dead json to single file?
 def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
-
     # if the previous live vehicle data exists use it
-    if os.path.exists('./{}'.format(VEHICLE_LIVE_FILE)):
-        prev_live = {}
-        dead = {}
-
+    if os.path.exists('./{}'.format(VEHICLE_DATA_FILE)):
         # open and read the previous live vehicle data
-        print('Found {}'.format(VEHICLE_LIVE_FILE))
-        with open('./{}'.format(VEHICLE_LIVE_FILE)) as f:
+        prev_live = {}
+        with open('./{}'.format(VEHICLE_DATA_FILE)) as f:
             prev_live = json.load(f)
 
-
         # sort the previous live vehicle data by key/VIN
-        prev_live_sorted = OrderedDict(sorted(prev_live.items()))
+        prev_sorted = OrderedDict(sorted(prev_live.items()))
+        # prev_sorted_available = get_dict_subset_available(prev_sorted)
+        prev_sorted_not_available = get_dict_subset_not_available(prev_sorted)
 
-
-
-        # print()
-        # print(prev_live_sorted)
-        # print()
-        # print('a: {}\n{}'.format(len(get_dict_subset_available(prev_live_sorted)), get_dict_subset_available(prev_live_sorted)))
-        # print()
-        # print('n: {}\n{}'.format(len(get_dict_subset_not_available(prev_live_sorted)), get_dict_subset_not_available(prev_live_sorted)))
-        # print()
-
-
-
-        # report on new stock never seen before
+        # TODO: sort by...
         for vehicle in vehicle_dict_sorted:
-            if vehicle not in prev_live_sorted:
+            if vehicle not in prev_sorted:
                 print('! {} new vehicle in inventory'.format(vehicle))
+            # elif vehicle in prev_sorted_available:
+            #     print('{}: vehicle previously found and live, update created'.format(vehicle))
+            elif vehicle in prev_sorted_not_available:
+                last_price = prev_sorted_not_available[vehicle]['our_price']
+                last_msrp = prev_sorted_not_available[vehicle]['original_price']
+                new_price = vehicle_dict_sorted[vehicle]['our_price']
+                new_msrp = vehicle_dict_sorted[vehicle]['original_price']
+                print('+ {} was dead, for sale again [diff price:{} msrp:{}]'.format(
+                    vehicle,
+                    new_price - last_price,
+                    new_msrp - last_msrp))
+                vehicle_dict_sorted[vehicle]['created'] = vehicle_dict_sorted[vehicle]['created']
+                vehicle_dict_sorted[vehicle]['updated'] = start_time
+                vehicle_dict_sorted[vehicle]['available'] = True
 
-
-        for vehicle in prev_live_sorted:
-            # previous live vehicle not found in current live data,
-            # update the vehicle and copy to the dead list
+        for vehicle in prev_sorted:
             if vehicle not in vehicle_dict_sorted:
-                print('- {} no longer listed for sale'.format(vehicle))
-                prev_live_sorted[vehicle]['updated'] = start_time
-                prev_live_sorted[vehicle]['available'] = False
-                dead[vehicle] = prev_live_sorted[vehicle]
+                print('X {} no longer listed for sale'.format(vehicle))
+                prev_sorted[vehicle]['updated'] = start_time
+                prev_sorted[vehicle]['available'] = False
+                vehicle_dict_sorted[vehicle] = prev_sorted[vehicle]
             else:
-                # previous live vehicle found in current live data,
-                # retain the vehicle's created date, updated has already
-                # been updated when vehicle_dict_sorted was created
-                last_price = prev_live_sorted[vehicle]['our_price']
-                last_msrp = prev_live_sorted[vehicle]['original_price']
+                last_price = prev_sorted[vehicle]['our_price']
+                last_msrp = prev_sorted[vehicle]['original_price']
                 new_price = vehicle_dict_sorted[vehicle]['our_price']
                 new_msrp = vehicle_dict_sorted[vehicle]['original_price']
                 print('= {} still for sale [diff price:{} msrp:{}]'.format(
                     vehicle,
                     new_price - last_price,
                     new_msrp - last_msrp))
-                vehicle_dict_sorted[vehicle]['created'] = prev_live_sorted[vehicle]['created']
+                vehicle_dict_sorted[vehicle]['created'] = prev_sorted[vehicle]['created']
+                vehicle_dict_sorted[vehicle]['updated'] = start_time
 
-        # if the dead vehicle list exists use it
-        if os.path.exists('./{}'.format(VEHICLE_DEAD_FILE)):
-            old_dead = {}
-
-            # open and read the previous dead vehicle data
-            with open('./{}'.format(VEHICLE_DEAD_FILE)) as f:
-                old_dead = json.load(f)
-
-            # iterate over deepcopy of previous dead vehicle data because we may be
-            # modifying old_dead (moving resurrected vehicles to the current live vehicle dict)
-            for vehicle in copy.deepcopy(old_dead):
-                if vehicle in vehicle_dict_sorted:
-                    last_price = old_dead[vehicle]['our_price']
-                    last_msrp = old_dead[vehicle]['original_price']
-                    new_price = vehicle_dict_sorted[vehicle]['our_price']
-                    new_msrp = vehicle_dict_sorted[vehicle]['original_price']
-                    print('+ {} was dead, for sale again [diff price:{} msrp:{}]'.format(
-                        vehicle,
-                        new_price - last_price,
-                        new_msrp - last_msrp))
-                    # remove vehicle from old dead
-                    del old_dead[vehicle]
-
-            # merge the newly found dead dict items with the remaining old_dead dict items
-            dead.update(old_dead)
-        else:
-            print('\nDid not find the old dead, new dead becomes old dead...')
-
-        # persist the current dead vehicle data
-        with open('./{}'.format(VEHICLE_DEAD_FILE), 'w') as f:
-            json.dump(dead, f, indent=4, sort_keys=True)
-
+        # TODO: sort by age
         # if there are any dead report on them
+        dead = get_dict_subset_not_available(vehicle_dict_sorted)
         if len(dead) > 0:
             print('\nRemoved from inventory: {}'.format(len(dead)))
             print(SEPARATOR)
+            # TODO: sort by update date
             print_vehicle_dict(dead, verify_link=True)
     else:
-        print('Did not find {}, creating and skipping dead handling'.format(VEHICLE_LIVE_FILE))
+        print('Did not find {}, creating and skipping dead handling'.format(VEHICLE_DATA_FILE))
 
-    # persist the current live vehicle data
-    with open('./{}'.format(VEHICLE_LIVE_FILE), 'w') as f:
+    # persist the current vehicle data
+    with open('./{}'.format(VEHICLE_DATA_FILE), 'w') as f:
         json.dump(vehicle_dict_sorted, f, indent=4, sort_keys=True)
 
     # put a couple empty lines at bottom of output

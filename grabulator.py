@@ -14,7 +14,9 @@ from requests_html import HTMLSession
 SLEEP_TIME        = 1.00
 VEHICLE_DATA_FILE = 'grabulator.json'
 VEHICLE_DATA_LEN  = 18
-SEPARATOR         = '----------------------------------------------------------------------------'
+SEPARATOR_THIN    = '----------------------------------------------------------------------------'
+SEPARATOR_BOLD    = '============================================================================'
+
 
 
 # fetches python "set" of links to vehicles from Rairdon's search index page specified by the url param.
@@ -101,7 +103,7 @@ def get_vehicle_data(url, tries=3, verbose=True):
     return None
 
 # helper to print the provided vehicle dict
-def print_vehicle_dict(vehicle_dict, verify_link=False):
+def print_vehicle_dict(vehicle_dict, verify_link=False, start_time=None):
     for vehicle in vehicle_dict:
         # if the vehicle is a special add the price delta between msrp and special price
         delta = '       '
@@ -116,17 +118,23 @@ def print_vehicle_dict(vehicle_dict, verify_link=False):
             else:
                 verified = '+ '
 
-        print('{}vin:{} stock:{} msrp:{} price:{}{} \"{}\" {:30s} {}'.format(
+        timestamp = ''
+        if start_time:
+            removed_timestamp = datetime.datetime.strptime(vehicle_dict[vehicle]['removed'], '%Y-%m-%dT%H:%M:%S.%f')
+            now_timestamp = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S.%f')
+            timestamp = ' [dead: {}]'.format(now_timestamp - removed_timestamp)
+
+        print('{}vin:{} stock:{} msrp:{} price:{}{} \"{}\" {:30s} {}{}'.format(
             verified,
             vehicle_dict[vehicle]['vin'],
             vehicle_dict[vehicle]['stock'],
-            # vehicle_dict[vehicle]['post_type'],
             vehicle_dict[vehicle]['original_price'],
             vehicle_dict[vehicle]['our_price'],
             delta,
             vehicle_dict[vehicle]['post_title'],
             vehicle_dict[vehicle]['ext_color'][:-5],
-            vehicle_dict[vehicle]['link']))
+            vehicle_dict[vehicle]['link'],
+            timestamp))
 
     return True
 
@@ -143,9 +151,10 @@ def fetch_link_set(urls):
             return None
 
         link_set |= url_set
-        print('Found {} vehicles on page {} for a total of {}'.format(
+        print('Found {} vehicles on page {} of {} for a total of {}'.format(
             get_inventory_count(url_set),
             count,
+            len(urls),
             get_inventory_count(link_set)))
         time.sleep(SLEEP_TIME)
 
@@ -165,12 +174,11 @@ def fetch_links_to_dict(link_set, start_time):
     count = 0
     vehicle_dict = {}
     total = get_inventory_count(link_set)
-    print('\nFound {} vehicles'.format(total))
-    print(SEPARATOR)
+    print('Found a total of {} vehicles'.format(total))
 
     for link in get_inventory_link_set(link_set):
         count += 1
-        print('Choochin on vehicle {} of {}...'.format(count, total))
+        print('Fetching data for vehicle {} of {}...'.format(count, total))
 
         #if count < 4:
         data = get_vehicle_data(link)
@@ -210,18 +218,15 @@ def parse_print_offers(vehicle_dict_sorted):
 
     print('\nFound {} specials'.format(len(specials)))
     print('Found {} regular offers'.format(len(normal)))
-    print(SEPARATOR)
-    print_vehicle_dict(specials)
-    print_vehicle_dict(normal)
-
+    print(SEPARATOR_THIN)
+    print_vehicle_dict(collections.OrderedDict(sorted(specials.items())))
+    print_vehicle_dict(collections.OrderedDict(sorted(normal.items())))
 
 def get_dict_subset_available(sorted_dict):
     return collections.OrderedDict({k:v for k,v in filter(lambda t: t[1]['available'], sorted_dict.items())})
 
-
 def get_dict_subset_not_available(sorted_dict):
     return collections.OrderedDict({k:v for k,v in filter(lambda t: not t[1]['available'], sorted_dict.items())})
-
 
 # persists received data and compares new results against previous results
 def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
@@ -234,10 +239,8 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
 
         # sort the previous live vehicle data by key/VIN
         prev_sorted = OrderedDict(sorted(prev_live.items()))
-        # prev_sorted_available = get_dict_subset_available(prev_sorted)
-        prev_sorted_not_available = get_dict_subset_not_available(prev_sorted)
+        prev_sorted_not_available = collections.OrderedDict(sorted(get_dict_subset_not_available(prev_sorted).items()))
 
-        # TODO: sort by...
         for vehicle in vehicle_dict_sorted:
             if vehicle not in prev_sorted:
                 print('! {} new vehicle in inventory'.format(vehicle))
@@ -253,12 +256,16 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
                     new_price - last_price,
                     new_msrp - last_msrp))
                 vehicle_dict_sorted[vehicle]['created'] = vehicle_dict_sorted[vehicle]['created']
+                if 'removed' in vehicle_dict_sorted[vehicle]:
+                    del prev_sorted[vehicle]['removed']
                 vehicle_dict_sorted[vehicle]['updated'] = start_time
                 vehicle_dict_sorted[vehicle]['available'] = True
 
         for vehicle in prev_sorted:
             if vehicle not in vehicle_dict_sorted:
-                print('X {} no longer listed for sale'.format(vehicle))
+                if 'removed' not in prev_sorted[vehicle]:
+                    print('X {} no longer listed for sale'.format(vehicle))
+                    prev_sorted[vehicle]['removed'] = start_time
                 prev_sorted[vehicle]['updated'] = start_time
                 prev_sorted[vehicle]['available'] = False
                 vehicle_dict_sorted[vehicle] = prev_sorted[vehicle]
@@ -274,14 +281,12 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
                 vehicle_dict_sorted[vehicle]['created'] = prev_sorted[vehicle]['created']
                 vehicle_dict_sorted[vehicle]['updated'] = start_time
 
-        # TODO: sort by age
         # if there are any dead report on them
-        dead = get_dict_subset_not_available(vehicle_dict_sorted)
+        dead = collections.OrderedDict(sorted(get_dict_subset_not_available(prev_sorted).items(), reverse=True, key=lambda x: x[1]['removed']))
         if len(dead) > 0:
             print('\nRemoved from inventory: {}'.format(len(dead)))
-            print(SEPARATOR)
-            # TODO: sort by update date
-            print_vehicle_dict(dead, verify_link=True)
+            print(SEPARATOR_THIN)
+            print_vehicle_dict(dead, verify_link=True, start_time=start_time)
     else:
         print('Did not find {}, creating and skipping dead handling'.format(VEHICLE_DATA_FILE))
 
@@ -289,16 +294,16 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
     with open('./{}'.format(VEHICLE_DATA_FILE), 'w') as f:
         json.dump(vehicle_dict_sorted, f, indent=4, sort_keys=True)
 
-    # put a couple empty lines at bottom of output
-    print('\n')
+    # put an empty line at bottom of output
+    print()
 
 
 def main():
     start_time = datetime.datetime.utcnow().isoformat()
-    print('\n----------------------------------------------------------------------------')
+    print(SEPARATOR_BOLD)
     print('Rairdon\'s Totem Lake Gladiator Rubicon Grabulator')
     print(start_time)
-    print('----------------------------------------------------------------------------\n')
+    print(SEPARATOR_BOLD)
 
     # urls of the known search results pages (index pages). Current inventory is 27 Gladiator
     # Rubicons which spans two index pages (20 vehicles per page). If results = 40 manually
@@ -308,7 +313,7 @@ def main():
         'https://www.dodgechryslerjeepofkirkland.com/new-vehicles/gladiator-2/?_p=1&_dFR%5Bmodel%5D%5B0%5D=Gladiator&_dFR%5Btrim%5D%5B0%5D=Rubicon&_dFR%5Btype%5D%5B0%5D=New&_paymentType=our_price'
     ]
 
-    print('Choochin on {} index pages...'.format(len(urls)))
+    # print('Choochin on {} index pages...'.format(len(urls)))
 
     # fetch the set of links/urls to each vehicle found on the index page(s)
     link_set = fetch_link_set(urls)
@@ -337,7 +342,7 @@ def main():
 
     # persists received data and compares new results against previous results
     print('\nProcess results against last results and dead list...')
-    print(SEPARATOR)
+    print(SEPARATOR_THIN)
     parse_persist_adds_deletes(vehicle_dict_sorted, start_time)
     
 

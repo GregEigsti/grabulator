@@ -19,7 +19,7 @@ SEPARATOR_BOLD    = '===========================================================
 
 
 
-# fetches python "set" of links to vehicles from Rairdon's search index page specified by the url param.
+# fetches python "set" of urls to vehicles from Rairdon's search index page specified by the url param.
 # Rairdon's site allows the user to query on vehicles/attributes and returns 20 matches per page maximum,
 # additional matches will be on subsequent pages. Rairdons is currently hovering between 20 and 40
 # vehicle listings of interest so this method is called twice, once for each page of <= 20 results.
@@ -29,7 +29,7 @@ def get_url_set(url, tries=3):
         # print('get_url_set: try {}'.format(i + 1))
 
         # reset everything just to be safe
-        links = set([])
+        urls = set([])
         session = None
         r = None
 
@@ -39,7 +39,7 @@ def get_url_set(url, tries=3):
             r = session.get(url)
             if r.status_code == 200:
                 r.html.render()
-                links = r.html.absolute_links
+                urls = r.html.absolute_links
             else:
                 print('get_url_set: GET status code != 200: {}'.format(r.status_code))
         except:
@@ -51,12 +51,12 @@ def get_url_set(url, tries=3):
         if session:
             session.close()
 
-        # return fetched links if succesful, otherwise retry if applicable
-        if get_inventory_count(links) < 1:
+        # return fetched urls if succesful, otherwise retry if applicable
+        if get_inventory_count(urls) < 1:
             print('Web fetch failed; retry...')
             time.sleep(SLEEP_TIME)
         else:
-            return links
+            return urls
 
     return set([])
 
@@ -103,7 +103,7 @@ def get_vehicle_data(url, tries=3, verbose=True):
     return None
 
 # helper to print the provided vehicle dict
-def print_vehicle_dict(vehicle_dict, verify_link=False, start_time=None):
+def print_vehicle_dict(vehicle_dict, verify_url=False, start_time=None):
     for vehicle in vehicle_dict:
         # if the vehicle is a special add the price delta between msrp and special price
         delta = '       '
@@ -112,8 +112,8 @@ def print_vehicle_dict(vehicle_dict, verify_link=False, start_time=None):
 
         # if requested do web lookup to see if vehicle page is gone (truly dead?)
         verified = ''
-        if verify_link:
-            if None == get_vehicle_data(vehicle_dict[vehicle]['link'], tries=1, verbose=False):
+        if verify_url:
+            if None == get_vehicle_data(vehicle_dict[vehicle]['url'], tries=1, verbose=False):
                 verified = '- '
             else:
                 verified = '+ '
@@ -133,63 +133,67 @@ def print_vehicle_dict(vehicle_dict, verify_link=False, start_time=None):
             delta,
             vehicle_dict[vehicle]['post_title'],
             vehicle_dict[vehicle]['ext_color'][:-5],
-            vehicle_dict[vehicle]['link'],
+            vehicle_dict[vehicle]['url'],
             timestamp))
 
     return True
 
-# fetch the set of links/urls to each vehicle found on the index page(s)
-def fetch_link_set(urls):
+# fetch the set of urls to each vehicle found on the index page(s)
+def fetch_url_set(urls):
     count = 0
-    link_set = set([])
+    url_set = set([])
 
     for url in urls:
         count += 1
-        url_set = get_url_set(url)
-        if url_set == None:
+        new_set = get_url_set(url)
+        if new_set == None:
             print('Received no data for index page {}'.format(count))
             return None
 
-        link_set |= url_set
-        print('Found {} vehicles on page {} of {} for a total of {}'.format(
-            get_inventory_count(url_set),
+        url_set |= new_set
+        print('Found {} vehicles on index page {} of {}; {} total'.format(
+            get_inventory_count(new_set),
             count,
             len(urls),
-            get_inventory_count(link_set)))
+            get_inventory_count(url_set)))
         time.sleep(SLEEP_TIME)
 
-    return link_set
+    return url_set
 
-# return inventory filtered link set
-def get_inventory_link_set(link_set):
-    return [l for l in link_set if '/inventory/' in l]
+# return inventory filtered url set
+def get_inventory_url_set(url_set):
+    return [l for l in url_set if '/inventory/' in l]
 
 # get count of found vehicles for more better user info
-def get_inventory_count(link_set):
-    return len(get_inventory_link_set(link_set))
+def get_inventory_count(url_set):
+    return len(get_inventory_url_set(url_set))
 
 # fetch page/data for each vehicle found in the inventory list and put into vehicle_dict
 # dict whose key is the VIN and value is another dict of vehicle attributes
-def fetch_links_to_dict(link_set, start_time):
+def fetch_urls_to_dict(url_set, start_time):
     count = 0
     vehicle_dict = {}
-    total = get_inventory_count(link_set)
-    print('Found a total of {} vehicles'.format(total))
+    total = get_inventory_count(url_set)
 
-    for link in get_inventory_link_set(link_set):
+    for url in get_inventory_url_set(url_set):
         count += 1
         print('Fetching data for vehicle {} of {}...'.format(count, total))
 
         #if count < 4:
-        data = get_vehicle_data(link)
+        data = get_vehicle_data(url)
         if data:
-            data['link'] = link
+            data['url'] = url
             data['updated'] = start_time
             data['created'] = start_time
-            data['special'] = False
-            data['available'] = True
             data['ext_color'] = data['ext_color'][:-15]
             data['post_title'] = data['post_title'][:-4]
+
+            if data['original_price'] == 0:
+                data['special'] = False
+                data['original_price'] = data['our_price']
+            else:
+                data['special'] = True
+
             vehicle_dict[data['vin']] = data
         else:
             print('Received no data for vehicle {}'.format(count))
@@ -199,39 +203,44 @@ def fetch_links_to_dict(link_set, start_time):
 
     return vehicle_dict
 
+def get_dict_subset_available(sorted_dict):
+    return collections.OrderedDict({k:v for k,v in filter(lambda t: 'removed' not in t[1], sorted_dict.items())})
+    
+def get_dict_subset_not_available(sorted_dict):
+    return collections.OrderedDict({k:v for k,v in filter(lambda t: 'removed' in t[1], sorted_dict.items())})
+
+def get_dict_subset_specials(sorted_dict):
+    return collections.OrderedDict({k:v for k,v in filter(lambda t: t[1]['special'], sorted_dict.items())})
+    
+def get_dict_subset_not_specials(sorted_dict):
+    return collections.OrderedDict({k:v for k,v in filter(lambda t: not t[1]['special'], sorted_dict.items())})
+
 # parses sorted vehicle dict into "specials" and "normal" offers and prints the two lists
 # with specials printed before normal offers. Updates vehicle_dict_sorted dict items
 # to normalize between the "our_price" and "original_price" vehicle attributes which
 # are kind of weird as delivered.
 def parse_print_offers(vehicle_dict_sorted):
-    specials = {}
-    for vehicle in vehicle_dict_sorted:
-        if vehicle_dict_sorted[vehicle]['original_price'] != 0:
-            specials[vehicle] = vehicle_dict_sorted[vehicle]
-            vehicle_dict_sorted[vehicle]['special'] = True
-
-    normal = {}
-    for vehicle in vehicle_dict_sorted:
-        if vehicle_dict_sorted[vehicle]['original_price'] == 0:
-            vehicle_dict_sorted[vehicle]['original_price'] = vehicle_dict_sorted[vehicle]['our_price']
-            normal[vehicle] = vehicle_dict_sorted[vehicle]
-
+    specials = get_dict_subset_specials(vehicle_dict_sorted)
+    normal = get_dict_subset_not_specials(vehicle_dict_sorted)
     print('\nFound {} specials'.format(len(specials)))
     print('Found {} regular offers'.format(len(normal)))
     print(SEPARATOR_THIN)
     print_vehicle_dict(collections.OrderedDict(sorted(specials.items())))
     print_vehicle_dict(collections.OrderedDict(sorted(normal.items())))
 
-def get_dict_subset_available(sorted_dict):
-    return collections.OrderedDict({k:v for k,v in filter(lambda t: t[1]['available'], sorted_dict.items())})
-
-def get_dict_subset_not_available(sorted_dict):
-    return collections.OrderedDict({k:v for k,v in filter(lambda t: not t[1]['available'], sorted_dict.items())})
+def diff_price_msrp(prev_sorted, vehicle_dict_sorted):
+    last_price = prev_sorted['our_price']
+    last_msrp = prev_sorted['original_price']
+    new_price = vehicle_dict_sorted['our_price']
+    new_msrp = vehicle_dict_sorted['original_price']
+    return new_price - last_price, new_msrp - last_msrp
 
 # persists received data and compares new results against previous results
 def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
     # if the previous live vehicle data exists use it
     if os.path.exists('./{}'.format(VEHICLE_DATA_FILE)):
+        lines_emitted = False
+
         # open and read the previous live vehicle data
         prev_live = {}
         with open('./{}'.format(VEHICLE_DATA_FILE)) as f:
@@ -243,50 +252,53 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
 
         for vehicle in vehicle_dict_sorted:
             if vehicle not in prev_sorted:
+                lines_emitted = True
                 print('! {} new vehicle in inventory'.format(vehicle))
             # elif vehicle in prev_sorted_available:
             #     print('{}: vehicle previously found and live, update created'.format(vehicle))
             elif vehicle in prev_sorted_not_available:
-                last_price = prev_sorted_not_available[vehicle]['our_price']
-                last_msrp = prev_sorted_not_available[vehicle]['original_price']
-                new_price = vehicle_dict_sorted[vehicle]['our_price']
-                new_msrp = vehicle_dict_sorted[vehicle]['original_price']
+                lines_emitted = True
+                diff_price, diff_msrp = diff_price_msrp(prev_sorted_not_available[vehicle], vehicle_dict_sorted[vehicle])
                 print('+ {} was dead, for sale again [diff price:{} msrp:{}]'.format(
                     vehicle,
-                    new_price - last_price,
-                    new_msrp - last_msrp))
-                vehicle_dict_sorted[vehicle]['created'] = vehicle_dict_sorted[vehicle]['created']
+                    diff_price,
+                    diff_msrp))
+
+                vehicle_dict_sorted[vehicle]['created'] = prev_sorted_not_available[vehicle]['created']
+                vehicle_dict_sorted[vehicle]['updated'] = start_time
                 if 'removed' in vehicle_dict_sorted[vehicle]:
                     del prev_sorted[vehicle]['removed']
-                vehicle_dict_sorted[vehicle]['updated'] = start_time
-                vehicle_dict_sorted[vehicle]['available'] = True
 
         for vehicle in prev_sorted:
             if vehicle not in vehicle_dict_sorted:
                 if 'removed' not in prev_sorted[vehicle]:
+                    lines_emitted = True
                     print('X {} no longer listed for sale'.format(vehicle))
                     prev_sorted[vehicle]['removed'] = start_time
+
                 prev_sorted[vehicle]['updated'] = start_time
-                prev_sorted[vehicle]['available'] = False
                 vehicle_dict_sorted[vehicle] = prev_sorted[vehicle]
             else:
-                last_price = prev_sorted[vehicle]['our_price']
-                last_msrp = prev_sorted[vehicle]['original_price']
-                new_price = vehicle_dict_sorted[vehicle]['our_price']
-                new_msrp = vehicle_dict_sorted[vehicle]['original_price']
-                print('= {} still for sale [diff price:{} msrp:{}]'.format(
-                    vehicle,
-                    new_price - last_price,
-                    new_msrp - last_msrp))
+                diff_price, diff_msrp = diff_price_msrp(prev_sorted[vehicle], vehicle_dict_sorted[vehicle])
+                if diff_price != 0 or diff_msrp != 0:
+                    lines_emitted = True
+                    print('= {} still for sale [diff price:{} msrp:{}]'.format(
+                        vehicle,
+                        diff_price,
+                        diff_msrp))
+
                 vehicle_dict_sorted[vehicle]['created'] = prev_sorted[vehicle]['created']
                 vehicle_dict_sorted[vehicle]['updated'] = start_time
+
+        if not lines_emitted:
+            print('Nothing of interest to report')
 
         # if there are any dead report on them
         dead = collections.OrderedDict(sorted(get_dict_subset_not_available(prev_sorted).items(), reverse=True, key=lambda x: x[1]['removed']))
         if len(dead) > 0:
             print('\nRemoved from inventory: {}'.format(len(dead)))
             print(SEPARATOR_THIN)
-            print_vehicle_dict(dead, verify_link=True, start_time=start_time)
+            print_vehicle_dict(dead, verify_url=True, start_time=start_time)
     else:
         print('Did not find {}, creating and skipping dead handling'.format(VEHICLE_DATA_FILE))
 
@@ -313,17 +325,15 @@ def main():
         'https://www.dodgechryslerjeepofkirkland.com/new-vehicles/gladiator-2/?_p=1&_dFR%5Bmodel%5D%5B0%5D=Gladiator&_dFR%5Btrim%5D%5B0%5D=Rubicon&_dFR%5Btype%5D%5B0%5D=New&_paymentType=our_price'
     ]
 
-    # print('Choochin on {} index pages...'.format(len(urls)))
-
-    # fetch the set of links/urls to each vehicle found on the index page(s)
-    link_set = fetch_link_set(urls)
-    if link_set == None:
+    # fetch the set of urls to each vehicle found on the index page(s)
+    url_set = fetch_url_set(urls)
+    if url_set == None:
         print('FATAL ERROR fetching index page; exiting...')
         exit(1)
 
     # fetch page/data for each vehicle found in the inventory list and put into vehicle_dict
     # dict whose key is the VIN and value is another dict of vehicle attributes
-    vehicle_dict = fetch_links_to_dict(link_set, start_time)
+    vehicle_dict = fetch_urls_to_dict(url_set, start_time)
     if vehicle_dict == None:
         print('FATAL ERROR fetching vehicle page; exiting...')
         exit(1)

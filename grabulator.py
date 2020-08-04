@@ -104,7 +104,9 @@ def get_url_set(url, tries=3):
     return set([])
 
 # fetch page/data for each vehicle found in the inventory list and put into vehicle_dict
-# dict whose key is the VIN and value is another dict of vehicle attributes
+# dict whose key is the VIN and value is another dict of vehicle attributes. Updates items
+# to normalize between the "our_price" and "original_price" vehicle attributes which
+# are kind of weird as delivered.
 def fetch_urls_to_dict(url_set, start_time):
     count = 0
     vehicle_dict = {}
@@ -122,6 +124,7 @@ def fetch_urls_to_dict(url_set, start_time):
             data['created'] = start_time
             data['ext_color'] = data['ext_color'][:-15]
             data['post_title'] = data['post_title'][:-4]
+            data['history'] = []
 
             if data['original_price'] == 0:
                 data['special'] = False
@@ -179,20 +182,19 @@ def get_vehicle_data(url, tries=3, verbose=True):
     return None
 
 # parses sorted vehicle dict into "specials" and "normal" offers and prints the two lists
-# with specials printed before normal offers. Updates vehicle_dict_sorted dict items
-# to normalize between the "our_price" and "original_price" vehicle attributes which
-# are kind of weird as delivered.
-def parse_print_offers(vehicle_dict_sorted):
-    specials = get_dict_subset_specials(vehicle_dict_sorted)
-    normal = get_dict_subset_not_specials(vehicle_dict_sorted)
-    print('\nFound {} specials'.format(len(specials)))
+# with specials printed before normal offers.
+def parse_print_offers(vehicle_dict_sorted, start_time):
+    available = get_dict_subset_available(vehicle_dict_sorted)
+    specials = get_dict_subset_specials(available)
+    normal = get_dict_subset_not_specials(available)
+    print('Found {} specials'.format(len(specials)))
     print('Found {} regular offers'.format(len(normal)))
     print(SEPARATOR_THIN)
-    print_vehicle_dict(collections.OrderedDict(sorted(specials.items())))
-    print_vehicle_dict(collections.OrderedDict(sorted(normal.items())))
+    print_vehicle_dict(collections.OrderedDict(sorted(specials.items())), start_time=start_time, history=True)
+    print_vehicle_dict(collections.OrderedDict(sorted(normal.items())), start_time=start_time, history=True)
 
 # helper to print the provided vehicle dict
-def print_vehicle_dict(vehicle_dict, verify_url=False, start_time=None):
+def print_vehicle_dict(vehicle_dict, verify_url=False, start_time=None, history=False):
     for vehicle in vehicle_dict:
         # if the vehicle is a special add the price delta between msrp and special price
         delta = '       '
@@ -209,9 +211,14 @@ def print_vehicle_dict(vehicle_dict, verify_url=False, start_time=None):
 
         timestamp = ''
         if start_time:
-            removed_timestamp = datetime.datetime.strptime(vehicle_dict[vehicle]['removed'], '%Y-%m-%dT%H:%M:%S.%f')
+            timestamp = 0
+            if 'removed' in vehicle_dict[vehicle]:
+                timestamp = datetime.datetime.strptime(vehicle_dict[vehicle]['removed'], '%Y-%m-%dT%H:%M:%S.%f')
+            else:
+                timestamp = datetime.datetime.strptime(vehicle_dict[vehicle]['created'], '%Y-%m-%dT%H:%M:%S.%f')
+
             now_timestamp = datetime.datetime.strptime(start_time, '%Y-%m-%dT%H:%M:%S.%f')
-            timestamp = ' [dead: {}]'.format(now_timestamp - removed_timestamp)
+            timestamp = ' [age: {}]'.format(now_timestamp - timestamp)
 
         print('{}vin:{} stock:{} msrp:{} price:{}{} \"{}\" {:30s} {}{}'.format(
             verified,
@@ -225,7 +232,12 @@ def print_vehicle_dict(vehicle_dict, verify_url=False, start_time=None):
             vehicle_dict[vehicle]['url'],
             timestamp))
 
-    return True
+        if history:
+            print_history(vehicle_dict[vehicle]['history'])
+
+def print_history(history):
+    for item in history:
+        print('   {} {} {}'.format(item[0], item[1], item[2]))
 
 # persists received data and compares new results against previous results
 def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
@@ -242,31 +254,44 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
         prev_sorted = OrderedDict(sorted(prev_live.items()))
         prev_sorted_not_available = collections.OrderedDict(sorted(get_dict_subset_not_available(prev_sorted).items()))
 
+        # iterate through the newly fetched data (vehicle_dict_sorted)
         for vehicle in vehicle_dict_sorted:
+            # if vehicle is not in persisted data it is new
             if vehicle not in prev_sorted:
                 lines_emitted = True
+                vehicle_dict_sorted[vehicle]['history'].append( (start_time, 'created', '') )
+
                 print('! {} new vehicle in inventory'.format(vehicle))
+                print_history(vehicle_dict_sorted[vehicle]['history'])
+
             # elif vehicle in prev_sorted_available:
             #     print('{}: vehicle previously found and live, update created'.format(vehicle))
+
             elif vehicle in prev_sorted_not_available:
                 lines_emitted = True
                 diff_price, diff_msrp = diff_price_msrp(prev_sorted_not_available[vehicle], vehicle_dict_sorted[vehicle])
-                print('+ {} was dead, for sale again [diff price:{} msrp:{}]'.format(
-                    vehicle,
-                    diff_price,
-                    diff_msrp))
-
+                vehicle_dict_sorted[vehicle]['history'].append( (start_time, 'added', 'diff price:{} msrp:{}'.format(diff_price, diff_msrp)) )
                 vehicle_dict_sorted[vehicle]['created'] = prev_sorted_not_available[vehicle]['created']
                 vehicle_dict_sorted[vehicle]['updated'] = start_time
                 if 'removed' in prev_sorted[vehicle]:
                     del prev_sorted[vehicle]['removed']
 
+                print('+ {} was removed, for sale again [diff price:{} msrp:{}]'.format(
+                    vehicle,
+                    diff_price,
+                    diff_msrp))
+                print_history(vehicle_dict_sorted[vehicle]['history'])
+
+        # iterate through the persisted data (prev_sorted)
         for vehicle in prev_sorted:
             if vehicle not in vehicle_dict_sorted:
                 if 'removed' not in prev_sorted[vehicle]:
                     lines_emitted = True
-                    print('X {} no longer listed for sale'.format(vehicle))
                     prev_sorted[vehicle]['removed'] = start_time
+                    prev_sorted[vehicle]['history'].append( (start_time, 'removed', '') )
+
+                    print('X {} no longer listed for sale'.format(vehicle))
+                    print_history(prev_sorted[vehicle]['history'])
 
                 prev_sorted[vehicle]['updated'] = start_time
                 vehicle_dict_sorted[vehicle] = prev_sorted[vehicle]
@@ -274,13 +299,17 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
                 diff_price, diff_msrp = diff_price_msrp(prev_sorted[vehicle], vehicle_dict_sorted[vehicle])
                 if diff_price != 0 or diff_msrp != 0:
                     lines_emitted = True
+                    prev_sorted[vehicle]['history'].append( (start_time, 'price', 'diff price:{} msrp:{}'.format(diff_price, diff_msrp)) )
+
                     print('= {} still for sale [diff price:{} msrp:{}]'.format(
                         vehicle,
                         diff_price,
                         diff_msrp))
+                    print_history(prev_sorted[vehicle]['history'])
 
                 vehicle_dict_sorted[vehicle]['updated'] = start_time
                 vehicle_dict_sorted[vehicle]['created'] = prev_sorted[vehicle]['created']
+                vehicle_dict_sorted[vehicle]['history'] = prev_sorted[vehicle]['history']
 
         if not lines_emitted:
             print('Nothing of interest to report')
@@ -290,16 +319,13 @@ def parse_persist_adds_deletes(vehicle_dict_sorted, start_time):
         if len(dead) > 0:
             print('\nRemoved from inventory: {}'.format(len(dead)))
             print(SEPARATOR_THIN)
-            print_vehicle_dict(dead, verify_url=True, start_time=start_time)
+            print_vehicle_dict(dead, verify_url=True, start_time=start_time, history=True)
     else:
         print('Did not find {}, creating and skipping dead handling'.format(VEHICLE_DATA_FILE))
 
     # persist the current vehicle data
     with open('./{}'.format(VEHICLE_DATA_FILE), 'w') as f:
         json.dump(vehicle_dict_sorted, f, indent=4, sort_keys=True)
-
-    # put an empty line at bottom of output
-    print()
 
 def diff_price_msrp(prev_sorted, vehicle_dict_sorted):
     last_price = prev_sorted['our_price']
@@ -335,7 +361,9 @@ def main():
         exit(1)
 
     # fetch page/data for each vehicle found in the inventory list and put into vehicle_dict
-    # dict whose key is the VIN and value is another dict of vehicle attributes
+    # dict whose key is the VIN and value is another dict of vehicle attributes. Updates 
+    # items to normalize between the "our_price" and "original_price" vehicle attributes
+    # which are kind of weird as delivered.
     vehicle_dict = fetch_urls_to_dict(url_set, start_time)
     if vehicle_dict == None:
         print('\nFATAL ERROR fetching vehicle page; exiting...\n')
@@ -347,17 +375,17 @@ def main():
         print('\nFATAL ERROR sorting vehicle list; exiting...\n')
         exit(1)
 
-    # parses sorted vehicle dict into "specials" and "normal" offers and prints the two lists
-    # with specials printed before normal offers. Updates vehicle_dict_sorted dict items
-    # to normalize between the "our_price" and "original_price" vehicle attributes which
-    # are kind of weird as delivered.
-    parse_print_offers(vehicle_dict_sorted)
-
     # persists received data and compares new results against previous results
     print('\nProcess results against last results and dead list...')
     print(SEPARATOR_THIN)
     parse_persist_adds_deletes(vehicle_dict_sorted, start_time)
-    
+    print()
+
+    # parses sorted vehicle dict into "specials" and "normal" offers and prints the two lists
+    # with specials printed before normal offers.
+    parse_print_offers(vehicle_dict_sorted, start_time)
+    print()
+
 
 if __name__ == '__main__':
     main()

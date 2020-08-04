@@ -7,6 +7,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 59940,
@@ -18,7 +25,7 @@
         "stock": "LL145871",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg0ll145871",
         "vin": "1C6JJTBG0LL145871",
         "year": "2020"
@@ -31,6 +38,18 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-21T14:50:22.752210",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 57800,
@@ -43,7 +62,7 @@
         "stock": "LL167076",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg0ll167076",
         "vin": "1C6JJTBG0LL167076",
         "year": "2020"
@@ -56,6 +75,18 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Gator Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-29T14:54:49.888552",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 59675,
@@ -63,23 +94,51 @@
         "post_content": "",
         "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
         "post_type": "inventory",
+        "removed": "2020-07-29T14:54:49.888552",
         "special": false,
         "stock": "LL196304",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg0ll196304",
         "vin": "1C6JJTBG0LL196304",
         "year": "2020"
     },
     "1C6JJTBG1LL145913": {
         "ID": 3641,
-        "api_id": "MP2287",
+        "api_id": "MP2179",
         "body": "Crew Cab",
         "bodytype": "Trucks",
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Sting-Gray Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-20T12:33:54.685957",
+                "removed",
+                ""
+            ],
+            [
+                "2020-07-30T12:33:54.685957",
+                "added",
+                ""
+            ],
+            [
+                "2020-07-30T17:42:34.646990",
+                "removed",
+                ""
+            ],
+            [
+                "2020-07-31T23:03:48.882343",
+                "added",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 54800,
@@ -91,7 +150,7 @@
         "stock": "LL145913",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg1ll145913",
         "vin": "1C6JJTBG1LL145913",
         "year": "2020"
@@ -104,6 +163,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Gator Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 60075,
@@ -115,7 +181,7 @@
         "stock": "LL196750",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg1ll196750",
         "vin": "1C6JJTBG1LL196750",
         "year": "2020"
@@ -128,6 +194,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Firecracker Red Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 57335,
@@ -139,7 +212,7 @@
         "stock": "LL200036",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg1ll200036",
         "vin": "1C6JJTBG1LL200036",
         "year": "2020"
@@ -152,6 +225,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 61335,
@@ -163,7 +243,7 @@
         "stock": "LL167046",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg2ll167046",
         "vin": "1C6JJTBG2LL167046",
         "year": "2020"
@@ -176,6 +256,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Billet Silver Metallic Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 58190,
@@ -187,7 +274,7 @@
         "stock": "LL184252",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg2ll184252",
         "vin": "1C6JJTBG2LL184252",
         "year": "2020"
@@ -200,6 +287,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Hydro Blue Pearl-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 58240,
@@ -211,7 +305,7 @@
         "stock": "LL189256",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg2ll189256",
         "vin": "1C6JJTBG2LL189256",
         "year": "2020"
@@ -224,6 +318,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Hydro Blue Pearl-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 59985,
@@ -235,19 +336,26 @@
         "stock": "LL189427",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg3ll189427",
         "vin": "1C6JJTBG3LL189427",
         "year": "2020"
     },
     "1C6JJTBG4LL163550": {
         "ID": 3922,
-        "api_id": "MP2178",
+        "api_id": "MP2399",
         "body": "Crew Cab",
         "bodytype": "Trucks",
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 60780,
@@ -259,7 +367,7 @@
         "stock": "LL163550",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg4ll163550",
         "vin": "1C6JJTBG4LL163550",
         "year": "2020"
@@ -272,6 +380,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Punk'n Metallic Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 58240,
@@ -283,7 +398,7 @@
         "stock": "LL189257",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg4ll189257",
         "vin": "1C6JJTBG4LL189257",
         "year": "2020"
@@ -296,6 +411,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Gator Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 59675,
@@ -307,31 +429,49 @@
         "stock": "LL196306",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg4ll196306",
         "vin": "1C6JJTBG4LL196306",
         "year": "2020"
     },
     "1C6JJTBG5LL189428": {
         "ID": 4855,
-        "api_id": "MP2179",
+        "api_id": "MP2287",
         "body": "Crew Cab",
         "bodytype": "Trucks",
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Hydro Blue Pearl-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-08-02T05:47:31.684332",
+                "price",
+                "diff price:6248 msrp:0"
+            ],
+            [
+                "2020-08-02T21:10:12.775120",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 60235,
-        "our_price": 53987,
+        "our_price": 60235,
         "post_content": "",
         "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
         "post_type": "inventory",
-        "special": true,
+        "removed": "2020-08-02T21:10:12.775120",
+        "special": false,
         "stock": "LL189428",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg5ll189428",
         "vin": "1C6JJTBG5LL189428",
         "year": "2020"
@@ -344,6 +484,18 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Bright White Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-26T18:10:16.023379",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 57895,
@@ -351,11 +503,12 @@
         "post_content": "",
         "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
         "post_type": "inventory",
+        "removed": "2020-07-26T18:10:16.023379",
         "special": false,
         "stock": "LL168040",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg6ll168040",
         "vin": "1C6JJTBG6LL168040",
         "year": "2020"
@@ -368,6 +521,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 58645,
@@ -379,7 +539,7 @@
         "stock": "LL184254",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg6ll184254",
         "vin": "1C6JJTBG6LL184254",
         "year": "2020"
@@ -392,6 +552,18 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Gator Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-31T23:03:48.882343",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 59675,
@@ -399,11 +571,12 @@
         "post_content": "",
         "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
         "post_type": "inventory",
+        "removed": "2020-07-31T23:03:48.882343",
         "special": false,
         "stock": "LL196310",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg6ll196310",
         "vin": "1C6JJTBG6LL196310",
         "year": "2020"
@@ -416,6 +589,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Sting-Gray Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 60075,
@@ -427,9 +607,40 @@
         "stock": "LL196761",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg6ll196761",
         "vin": "1C6JJTBG6LL196761",
+        "year": "2020"
+    },
+    "1C6JJTBG6LL211128": {
+        "ID": 5963,
+        "api_id": "MP2179",
+        "body": "Crew Cab",
+        "bodytype": "Trucks",
+        "created": "2020-07-31T23:03:48.882343",
+        "ext_color": "Bright White Clear-Coat",
+        "filter": "raw",
+        "history": [
+            [
+                "2020-07-31T23:03:48.882343",
+                "created",
+                ""
+            ]
+        ],
+        "make": "JEEP",
+        "model": "Gladiator",
+        "original_price": 55440,
+        "our_price": 55440,
+        "post_content": "",
+        "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
+        "post_type": "inventory",
+        "special": false,
+        "stock": "LL211128",
+        "trim": "Rubicon",
+        "type": "New",
+        "updated": "2020-08-04T01:56:30.161512",
+        "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg6ll211128",
+        "vin": "1C6JJTBG6LL211128",
         "year": "2020"
     },
     "1C6JJTBG7LL135855": {
@@ -440,6 +651,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 57345,
@@ -451,7 +669,7 @@
         "stock": "LL135855",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg7ll135855",
         "vin": "1C6JJTBG7LL135855",
         "year": "2020"
@@ -464,6 +682,18 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Bright White Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-20T14:50:22.752210",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 55215,
@@ -476,19 +706,26 @@
         "stock": "LL156737",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg7ll156737",
         "vin": "1C6JJTBG7LL156737",
         "year": "2020"
     },
     "1C6JJTBG8LL163549": {
         "ID": 3923,
-        "api_id": "MP2178",
+        "api_id": "MP2287",
         "body": "Crew Cab",
         "bodytype": "Trucks",
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 60780,
@@ -500,7 +737,7 @@
         "stock": "LL163549",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg8ll163549",
         "vin": "1C6JJTBG8LL163549",
         "year": "2020"
@@ -513,6 +750,18 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Hydro Blue Pearl-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-31T12:13:22.009516",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 55490,
@@ -520,11 +769,12 @@
         "post_content": "",
         "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
         "post_type": "inventory",
+        "removed": "2020-07-31T12:13:22.009516",
         "special": false,
         "stock": "LL163860",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg8ll163860",
         "vin": "1C6JJTBG8LL163860",
         "year": "2020"
@@ -537,6 +787,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Sting-Gray Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 54630,
@@ -548,9 +805,40 @@
         "stock": "LL196700",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg8ll196700",
         "vin": "1C6JJTBG8LL196700",
+        "year": "2020"
+    },
+    "1C6JJTBG8LL211129": {
+        "ID": 5929,
+        "api_id": "MP2179",
+        "body": "Crew Cab",
+        "bodytype": "Trucks",
+        "created": "2020-07-30T12:33:54.685957",
+        "ext_color": "Firecracker Red Clear-Coat",
+        "filter": "raw",
+        "history": [
+            [
+                "2020-07-30T12:33:54.685957",
+                "created",
+                ""
+            ]
+        ],
+        "make": "JEEP",
+        "model": "Gladiator",
+        "original_price": 55440,
+        "our_price": 55440,
+        "post_content": "",
+        "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
+        "post_type": "inventory",
+        "special": false,
+        "stock": "LL211129",
+        "trim": "Rubicon",
+        "type": "New",
+        "updated": "2020-08-04T01:56:30.161512",
+        "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg8ll211129",
+        "vin": "1C6JJTBG8LL211129",
         "year": "2020"
     },
     "1C6JJTBG9LL145870": {
@@ -561,6 +849,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Black Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 58660,
@@ -572,7 +867,7 @@
         "stock": "LL145870",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg9ll145870",
         "vin": "1C6JJTBG9LL145870",
         "year": "2020"
@@ -585,6 +880,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Bright White Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 60075,
@@ -596,7 +898,7 @@
         "stock": "LL196740",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbg9ll196740",
         "vin": "1C6JJTBG9LL196740",
         "year": "2020"
@@ -609,6 +911,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Punk'n Metallic Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 56505,
@@ -620,19 +929,31 @@
         "stock": "LL188128",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbgxll188128",
         "vin": "1C6JJTBGXLL188128",
         "year": "2020"
     },
     "1C6JJTBGXLL196679": {
         "ID": 5603,
-        "api_id": "MP2179",
+        "api_id": "MP2287",
         "body": "Crew Cab",
         "bodytype": "Trucks",
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Bright White Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ],
+            [
+                "2020-07-31T23:03:48.882343",
+                "removed",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 54630,
@@ -640,23 +961,31 @@
         "post_content": "",
         "post_title": "NEW 2020 JEEP GLADIATOR RUBICON",
         "post_type": "inventory",
+        "removed": "2020-07-31T23:03:48.882343",
         "special": false,
         "stock": "LL196679",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbgxll196679",
         "vin": "1C6JJTBGXLL196679",
         "year": "2020"
     },
     "1C6JJTBGXLL196696": {
         "ID": 5634,
-        "api_id": "MP2287",
+        "api_id": "MP2179",
         "body": "Crew Cab",
         "bodytype": "Trucks",
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Granite Crystal Metallic Clear-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 54875,
@@ -668,7 +997,7 @@
         "stock": "LL196696",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbgxll196696",
         "vin": "1C6JJTBGXLL196696",
         "year": "2020"
@@ -681,6 +1010,13 @@
         "created": "2020-07-16T22:43:59.818255",
         "ext_color": "Hydro Blue Pearl-Coat",
         "filter": "raw",
+        "history": [
+            [
+                "2020-07-16T22:43:59.818255",
+                "created",
+                ""
+            ]
+        ],
         "make": "JEEP",
         "model": "Gladiator",
         "original_price": 61865,
@@ -692,7 +1028,7 @@
         "stock": "LL200035",
         "trim": "Rubicon",
         "type": "New",
-        "updated": "2020-07-26T14:52:33.570037",
+        "updated": "2020-08-04T01:56:30.161512",
         "url": "https://www.dodgechryslerjeepofkirkland.com/inventory/new-2020-jeep-gladiator-rubicon-4x4-crew-cab-1c6jjtbgxll200035",
         "vin": "1C6JJTBGXLL200035",
         "year": "2020"
